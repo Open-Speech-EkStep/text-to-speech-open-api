@@ -7,8 +7,8 @@ apt-get install -y sudo wget python3-pip git
 
 
 git clone https://github.com/Open-Speech-EkStep/vakyansh-tts
-pip3 install --no-cache-dir -r requirement.txt
 cd vakyansh-tts
+pip3 install --no-cache-dir -r requirement.txt
 bash install.sh
 python setup.py bdist_wheel
 pip install -e .
