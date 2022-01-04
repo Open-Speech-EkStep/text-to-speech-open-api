@@ -2,10 +2,11 @@ import base64
 import json
 import os
 from typing import Optional
-from scipy.io.wavfile import write
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from scipy.io.wavfile import write
 from texttospeech import MelToWav, TextToMel
 
 app = FastAPI()
@@ -29,10 +30,12 @@ else:
 supported_languages = list(model_config.keys())
 available_choice = {}
 for language_code, lang_config in model_config.items():
-    available_choice[f"{language_code}_male"] = [TextToMel(glow_model_dir=lang_config.get("male_glow"), device=DEVICE),
-                                                 MelToWav(hifi_model_dir=lang_config.get("male_hifi"), device=DEVICE)]
-    available_choice[f"{language_code}_female"] = [TextToMel(glow_model_dir=lang_config.get("female_glow"), device=DEVICE),
-                                                 MelToWav(hifi_model_dir=lang_config.get("female_hifi"), device=DEVICE)]
+    available_choice[f"{language_code}_male"] = [
+        TextToMel(glow_model_dir=MODEL_BASE_PATH + lang_config.get("male_glow"), device=DEVICE),
+        MelToWav(hifi_model_dir=MODEL_BASE_PATH + lang_config.get("male_hifi"), device=DEVICE)]
+    available_choice[f"{language_code}_female"] = [
+        TextToMel(glow_model_dir=MODEL_BASE_PATH + lang_config.get("female_glow"), device=DEVICE),
+        MelToWav(hifi_model_dir=MODEL_BASE_PATH + lang_config.get("female_hifi"), device=DEVICE)]
 
 # glow_hi_male = TextToMel(glow_model_dir="", device="")
 # glow_hi_female = TextToMel(glow_model_dir="", device="")
