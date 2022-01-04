@@ -13,6 +13,7 @@ bash install.sh
 python3 setup.py bdist_wheel
 pip install -e .
 cd tts_infer
-gsutil -m cp -r gs://vakyaansh-open-models/translit_models .
+mkdir -p translit_models
+#gsutil -m cp -r gs://vakyaansh-open-models/translit_models .
 
 
