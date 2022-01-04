@@ -3,7 +3,7 @@
 echo "Setting up model dependencies...."
 
 apt-get update && apt-get upgrade -y
-apt-get install -y sudo wget python3-pip git
+apt-get install -y sudo wget python3-pip git libsndfile1 libsndfile1-dev
 
 apt install python-is-python3
 git clone https://github.com/Open-Speech-EkStep/vakyansh-tts
