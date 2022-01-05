@@ -81,5 +81,5 @@ async def tts(input: TextJson):
 
 if __name__ == "__main__":
     uvicorn.run(
-        "t2s_fastapi:app", host="127.0.0.1", port=5000, log_level="info", reload=True
+        "server:app", host="127.0.0.1", port=5000, log_level="info", reload=True
     )
