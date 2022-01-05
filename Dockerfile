@@ -2,7 +2,7 @@ FROM gcr.io/ekstepspeechrecognition/text_to_speech_open_api_dependency:1.0.0
 
 
 ARG DEBIAN_FRONTEND=noninteractive
-
+EXPOSE 5000
 RUN mkdir /opt/text_to_speech_open_api/
 ENV base_path=/opt/text_to_speech_open_api/
 ENV models_base_path=/opt/text_to_speech_open_api/deployed_models/
