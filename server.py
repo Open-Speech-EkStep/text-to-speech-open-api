@@ -3,12 +3,14 @@ import json
 import os
 from typing import Optional
 
+import torch
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from scipy.io.wavfile import write
 from texttospeech import MelToWav, TextToMel
-from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class TextJson(BaseModel):
     text: str
     lang: Optional[str] = "hi"
@@ -25,7 +28,9 @@ class TextJson(BaseModel):
 
 
 MODEL_BASE_PATH = os.environ.get('models_base_path', '')
-DEVICE = os.environ.get('device', 'cpu')
+gpu_present = torch.cuda.is_available()
+print("Gpu present : ", gpu_present)
+DEVICE = "cuda" if gpu_present else "cpu"
 model_config_file_path = MODEL_BASE_PATH + 'model_dict.json'
 if os.path.exists(model_config_file_path):
     with open(model_config_file_path, 'r') as f:
