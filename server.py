@@ -9,7 +9,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from scipy.io.wavfile import write
-from texttospeech import MelToWav, TextToMel
+from tts_infer.num_to_word_on_sent import normalize_nums
+from tts_infer.transliterate import XlitEngine
+from tts_infer.tts import TextToMel, MelToWav
 
 app = FastAPI()
 app.add_middleware(
@@ -48,6 +50,7 @@ for language_code, lang_config in model_config.items():
         TextToMel(glow_model_dir=MODEL_BASE_PATH + lang_config.get("female_glow"), device=DEVICE),
         MelToWav(hifi_model_dir=MODEL_BASE_PATH + lang_config.get("female_hifi"), device=DEVICE)]
 
+transliterate_obj = XlitEngine()
 # glow_hi_male = TextToMel(glow_model_dir="", device="")
 # glow_hi_female = TextToMel(glow_model_dir="", device="")
 # hifi_hi = MelToWav(hifi_model_dir="", device="")
@@ -58,6 +61,13 @@ for language_code, lang_config in model_config.items():
 # }
 
 print(available_choice)
+
+
+def pre_process_text(text, lang):
+    if lang == 'hi':
+        text = text.replace('।', '.')  # only for hindi models
+    return text
+
 
 @app.post("/TTS/")
 async def tts(input: TextJson):
@@ -74,7 +84,11 @@ async def tts(input: TextJson):
         )
 
     if text:
-        mel = t2s[0].generate_mel(text)
+        text = pre_process_text(text, lang)
+        text_num_to_word = normalize_nums(text, lang)  # converting numbers to words in lang
+        text_num_to_word_and_transliterated = transliterate_obj.translit_sentence(text_num_to_word,
+                                                                                  lang)  # transliterating english words to lang
+        mel = t2s[0].generate_mel(' ' + text_num_to_word_and_transliterated)
         data, sr = t2s[1].generate_wav(mel)
         write(filename='out.wav', rate=sr, data=data)
     else:
