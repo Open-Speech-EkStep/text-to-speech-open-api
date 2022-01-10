@@ -19,6 +19,20 @@ parameters:
     default: false
 
 jobs:
+  sonar-scan:
+    machine:
+      image: ubuntu-2004:202101-01
+    working_directory: ~/text-to-speech-open-api/
+    steps:
+      - checkout:
+          path: ~/text-to-speech-open-api
+      - run:
+          name: Branch
+          command: echo $CIRCLE_BRANCH
+      - run:
+          name: Sonar Scan
+          command: docker run --rm -e SONAR_HOST_URL="https://sonarcloud.io" -e SONAR_TOKEN=$SONAR_TOKEN -v $PWD:/usr/src sonarsource/sonar-scanner-cli -Dsonar.branch.name=$CIRCLE_BRANCH
+
   build_and_deploy_api_image:
     machine:
       image: ubuntu-2004:202101-01
@@ -67,6 +81,8 @@ workflows:
   version: 2
   main_workflow:
     jobs:
+    - sonar-scan:
+        name: sonar-scan
     - approve_to_publish:
          name: approve-build-and-deploy
          type: approval
