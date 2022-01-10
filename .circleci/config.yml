@@ -81,8 +81,8 @@ workflows:
   version: 2
   main_workflow:
     jobs:
-    - sonar-scan:
-        name: sonar-scan
+#    - sonar-scan:
+#        name: sonar-scan
     - approve_to_publish:
          name: approve-build-and-deploy
          type: approval
