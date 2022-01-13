@@ -10,10 +10,12 @@ from mosestokenizer import *
 from scipy.io.wavfile import write
 from tts_infer.num_to_word_on_sent import normalize_nums
 
+from src import log_setup
 from src.config import settings
 from src.infer.model_inference import ModelService
 from src.model.tts_request import TTSRequest
 
+LOGGER = log_setup.get_logger(__name__)
 model_service = ModelService()
 _INDIC = ["as", "bn", "gu", "hi", "kn", "ml", "mr", "or", "pa", "ta", "te"]
 
@@ -23,6 +25,8 @@ def infer_tts(request: TTSRequest):
     gender = request.gender
     text_to_infer = request.text
     choice = lang + "_" + gender
+    LOGGER.debug(f'choice for model {choice}')
+
     if choice in model_service.available_choice.keys():
         t2s = model_service.available_choice[choice]
     else:
@@ -33,13 +37,13 @@ def infer_tts(request: TTSRequest):
     if text_to_infer:
         # text = pre_process_text(text, lang)
         if len(text_to_infer) > settings.tts_max_text_limit:
-            print("Running in paragraph mode...")
+            LOGGER.debug("Running in paragraph mode...")
             audio, sr = run_tts_paragraph(text_to_infer, lang, t2s)
         else:
-            print("Running in text mode...")
+            LOGGER.debug("Running in text mode...")
             audio, sr = run_tts(text_to_infer, lang, t2s)
         torch.cuda.empty_cache()
-        print(audio)
+        LOGGER.debug(audio)
         bytes_wav = bytes()
         byte_io = io.BytesIO(bytes_wav)
         write(byte_io, sr, audio)
