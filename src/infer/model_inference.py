@@ -19,7 +19,9 @@ class ModelService:
         LOGGER.info("Gpu present : %s", gpu_present)
         LOGGER.info(f'Loading with settings {settings}')
 
-        self.device = "cuda" if gpu_present else "cpu"
+        self.device = "cuda" if gpu_present & settings.gpu else "cpu"
+        LOGGER.info("Using device : %s", self.device)
+
         model_config_file_path = settings.model_config_file_path
         if os.path.exists(model_config_file_path):
             with open(model_config_file_path, 'r') as f:
