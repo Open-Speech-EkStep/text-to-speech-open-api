@@ -17,6 +17,6 @@ async def tts(request: TTSRequest):
         LOGGER.exception('Failed to infer %s', e)
 
     if response is not None:
-        return {"encoding": "base64", "data": response.encoded_string, "sr": response.sr}
+        return response
     else:
-        return {"encoding": "base64", "data": 'Error', "sr": '0'}
+        return {"error": 'Failed to process: ' + str(e)}

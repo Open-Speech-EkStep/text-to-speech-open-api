@@ -42,14 +42,16 @@ def infer_tts(request: TTSRequest):
         else:
             LOGGER.debug("Running in text mode...")
             audio, sr = run_tts(text_to_infer, lang, t2s)
-        torch.cuda.empty_cache()
-        LOGGER.debug(audio)
+        torch.cuda.empty_cache()  # TODO: find better approach for this
+        LOGGER.debug('Audio generates successfully')
         bytes_wav = bytes()
         byte_io = io.BytesIO(bytes_wav)
         write(byte_io, sr, audio)
         encoded_bytes = base64.b64encode(byte_io.read())
         encoded_string = encoded_bytes.decode()
+        LOGGER.debug(f'Encoded Audio string {encoded_string}')
         # write(filename='out.wav', rate=sr, data=audio) #If persisting of files are needed
+        return {"encoding": "base64", "data": encoded_string, "sr": sr}
     else:
         raise HTTPException(status_code=400, detail={"error": "No text"})
 
