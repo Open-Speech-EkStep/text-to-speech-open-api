@@ -22,7 +22,7 @@ class ModelService:
         self.device = "cuda" if gpu_present & settings.gpu else "cpu"
         LOGGER.info("Using device : %s", self.device)
 
-        model_config_file_path = settings.model_config_file_path
+        model_config_file_path = settings.models_base_path+settings.model_config_file_path
         if os.path.exists(model_config_file_path):
             with open(model_config_file_path, 'r') as f:
                 model_config = json.load(f)
