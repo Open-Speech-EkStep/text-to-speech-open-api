@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     server_port: int = 5000
     log_level: str = 'INFO'
     gpu: bool = True
-    max_worker: int = 50
     tts_max_text_limit: int = 450
     models_base_path: str = ''
     model_config_file_path: str = 'model_dict.json'
