@@ -14,6 +14,7 @@ from src import log_setup
 from src.config import settings
 from src.infer.model_inference import ModelService
 from src.model.tts_request import TTSRequest
+from src.model.tts_response import TTSResponse
 
 LOGGER = log_setup.get_logger(__name__)
 model_service = ModelService()
@@ -50,8 +51,7 @@ def infer_tts(request: TTSRequest):
         encoded_bytes = base64.b64encode(byte_io.read())
         encoded_string = encoded_bytes.decode()
         LOGGER.debug(f'Encoded Audio string {encoded_string}')
-        # write(filename='out.wav', rate=sr, data=audio) #If persisting of files are needed
-        return {"encoding": "base64", "data": encoded_string, "sr": sr}
+        return TTSResponse(data=encoded_string, sr=sr)
     else:
         raise HTTPException(status_code=400, detail={"error": "No text"})
 
