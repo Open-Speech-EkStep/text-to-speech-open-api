@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     app_name: str = "TTS API"
     server_port: int = 5000
     log_level: str = 'INFO'
-    gpu: bool = False
+    gpu: bool = True
     max_worker: int = 50
     tts_max_text_limit: int = 450
     models_base_path: str = ''
