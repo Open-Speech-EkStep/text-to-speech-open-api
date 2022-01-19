@@ -2,13 +2,15 @@ from typing import List
 
 from pydantic import BaseModel
 
+from src.model.language import Language
+
 
 class AudioFile(BaseModel):
     audioContent: str
 
 
 class AudioConfig(BaseModel):
-    language: str
+    language: Language
     audioFormat: str = 'wav'
     encoding: str = 'base64'
     samplingRate: int = 22050

@@ -13,6 +13,7 @@ from tts_infer.num_to_word_on_sent import normalize_nums
 from src import log_setup
 from src.config import settings
 from src.infer.model_inference import ModelService
+from src.model.language import Language
 from src.model.tts_request import TTSRequest
 from src.model.tts_response import TTSResponse, AudioFile, TTSFailureResponse, AudioConfig
 
@@ -26,7 +27,7 @@ def infer_tts_request(request: TTSRequest):
     lang = config.language.sourceLanguage
     gender = config.gender
     output_list = []
-    audio_config = AudioConfig(language=lang)
+    audio_config = AudioConfig(language=Language(sourceLanguage=lang))
     try:
         for sentence in request.input:
             LOGGER.debug(f'infer for gender {gender} and lang {lang} text {sentence.source}')

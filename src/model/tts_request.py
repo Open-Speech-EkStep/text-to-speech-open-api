@@ -2,13 +2,11 @@ from typing import List
 
 from pydantic import BaseModel
 
+from src.model.language import Language
+
 
 class Sentence(BaseModel):
     source: str
-
-
-class Language(BaseModel):
-    sourceLanguage: str
 
 
 class TTSConfig(BaseModel):

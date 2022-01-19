@@ -10,7 +10,7 @@ from src.config import settings
 _FORMATTER = logging.Formatter(
     "%(asctime)s — [%(threadName)s] - %(name)s -  %(filename)s.%(funcName)s(%(lineno)d) - %(levelname)s - %(message)s")
 LOGS_MODEL_BASE_PATH = Path(os.environ.get('model_logs_base_path', os.getcwd()))
-LOG_FILE = f"inference_" + socket.gethostname() + ".log"
+LOG_FILE = f"tts_inference_" + socket.gethostname() + ".log"
 
 _FILE_LOGGER_HANDLER = None
 _CONSOLE_LOGGER_HANDLER = None
