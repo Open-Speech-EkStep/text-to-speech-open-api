@@ -4,7 +4,7 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     app_name: str = "TTS API"
     server_port: int = 5000
-    log_level: str = 'INFO'
+    log_level: str = 'DEBUG'
     gpu: bool = True
     tts_max_text_limit: int = 450
     models_base_path: str = ''
