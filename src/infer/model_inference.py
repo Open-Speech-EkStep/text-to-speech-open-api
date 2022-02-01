@@ -29,7 +29,7 @@ class ModelService:
                 model_config = json.load(f)
         else:
             raise Exception(f'Model configuration file is missing at {model_config_file_path}')
-        languages = ast.literal_eval(utilities.get_env_var('languages', ['all']))
+        languages = ast.literal_eval(utilities.get_env_var('languages', '["all"]'))
         self.supported_languages = list(model_config.keys())
         LOGGER.info(f'supported languages {self.supported_languages}')
         self.available_choice = {}
@@ -51,4 +51,5 @@ class ModelService:
         if len(self.available_choice) == 0:
             LOGGER.error(
                 f'Invalid languages requested in {languages} ,only supported languages are {self.supported_languages}')
+            raise Exception(f'Invalid languages requested')
         self.transliterate_obj = XlitEngine()
