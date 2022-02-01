@@ -34,4 +34,8 @@ class TTSRequest(BaseModel):
     input: List[Sentence]
     config: TTSConfig
 
-# TODO: Add validation for possible values of gender and language
+    @validator('input', pre=True)
+    def input_cannot_be_empty(cls, value, field):
+        if len(value) < 1:
+            raise ValueError('input cannot be empty')
+        return value

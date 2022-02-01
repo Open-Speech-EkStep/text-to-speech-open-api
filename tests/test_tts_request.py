@@ -111,6 +111,18 @@ class TTSRequestTest(unittest.TestCase):
         sentence = Sentence(source='Text')
         self.assertEqual(sentence.source, 'Text')
 
+    def test_empty_input(self):
+        try:
+            request = TTSRequest(input=[], config=TTSConfig(gender='female', language=Language(sourceLanguage='en')))
+        except ValidationError as e:
+            self.assertEqual(len(e.errors()), 1)
+            self.assertEqual(e.errors()[0]['type'], 'value_error')
+            self.assertEqual(e.errors()[0]['loc'][0], 'input')
+            self.assertEqual(e.errors()[0]['msg'], 'input cannot be empty')
+            pass
+        except Exception as er:
+            self.fail(f'Expected validation error for {er}')
+
 
 if __name__ == '__main__':
     unittest.main()
