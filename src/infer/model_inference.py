@@ -1,3 +1,4 @@
+import ast
 import json
 import os
 
@@ -28,7 +29,7 @@ class ModelService:
                 model_config = json.load(f)
         else:
             raise Exception(f'Model configuration file is missing at {model_config_file_path}')
-        languages = list(utilities.get_env_var('languages', ['all']))
+        languages = ast.literal_eval(utilities.get_env_var('languages', ['all']))
         self.supported_languages = list(model_config.keys())
         LOGGER.info(f'supported languages {self.supported_languages}')
         self.available_choice = {}
