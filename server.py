@@ -22,5 +22,5 @@ app.include_router(tts_routes.router)
 if __name__ == "__main__":
     LOGGER.info(f'Loading with settings {settings}')
     uvicorn.run(
-        "server:app", host="0.0.0.0", port=settings.server_port, log_level=settings.log_level.lower(), reload=True
+        "server:app", host="0.0.0.0", port=settings.server_port, log_level=settings.log_level.lower(), reload=False
     )
