@@ -32,6 +32,7 @@ class ModelService:
         self.supported_languages = list(model_config.keys())
         LOGGER.info(f'supported languages {self.supported_languages}')
         self.available_choice = {}
+        LOGGER.info(f'requested languages are {languages}')
         for language_code, lang_config in model_config.items():
             if language_code in languages or 'all' in languages:
                 self.available_choice[f"{language_code}_male"] = [
@@ -45,5 +46,8 @@ class ModelService:
                     MelToWav(hifi_model_dir=settings.models_base_path + lang_config.get("female_hifi"),
                              device=self.device)]
                 LOGGER.info(f'{language_code} Models initialized successfully')
-            LOGGER.info(f'Model service available_choices are {self.available_choice}')
+        LOGGER.info(f'Model service available_choices are {self.available_choice}')
+        if len(self.available_choice) == 0:
+            LOGGER.error(
+                f'Invalid languages requested in {languages} ,only supported languages are {self.supported_languages}')
         self.transliterate_obj = XlitEngine()
