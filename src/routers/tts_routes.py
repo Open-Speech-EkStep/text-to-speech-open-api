@@ -9,7 +9,7 @@ LOGGER = log_setup.get_logger(__name__)
 router = APIRouter()
 
 
-@router.post("/TTS/")
+@router.post("/")
 async def tts(request: TTSRequest):
     LOGGER.info(f'TTS request {request}')
     response = None
