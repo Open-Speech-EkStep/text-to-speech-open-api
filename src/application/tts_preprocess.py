@@ -53,13 +53,15 @@ def infer_tts(language: str, gender: str, text_to_infer: str):
         )
 
     if text_to_infer:
-        # text = pre_process_text(text, lang)
-        if len(text_to_infer) > settings.tts_max_text_limit:
-            LOGGER.debug("Running in paragraph mode...")
-            audio, sr = run_tts_paragraph(text_to_infer, language, t2s)
-        else:
-            LOGGER.debug("Running in text mode...")
-            audio, sr = run_tts(text_to_infer, language, t2s)
+        text_to_infer = normalize_text(text_to_infer, lang)
+        
+        
+        #if len(text_to_infer) > settings.tts_max_text_limit:
+        LOGGER.debug("Running in paragraph mode...")
+        audio, sr = run_tts_paragraph(text_to_infer, language, t2s)
+#         else:
+#             LOGGER.debug("Running in text mode...")
+#             audio, sr = run_tts(text_to_infer, language, t2s)
         torch.cuda.empty_cache()  # TODO: find better approach for this
         LOGGER.debug('Audio generates successfully')
         bytes_wav = bytes()
@@ -81,6 +83,12 @@ def split_sentences(paragraph, language):
         return sentence_tokenize.sentence_split(paragraph, lang=language)
 
 
+def normalize_text(text, lang):
+    if lang == 'hi':
+        text = text.replace('|', '।')
+        text = text.replace('.', '।')
+    return text
+    
 def pre_process_text(text, lang):
     if lang == 'hi':
         text = text.replace('।', '.')  # only for hindi models
@@ -92,7 +100,7 @@ def run_tts_paragraph(text, lang, t2s):
     split_sentences_list = split_sentences(text, language='hi')
 
     for sent in split_sentences_list:
-        audio, sr = run_tts(sent, lang, t2s)
+        audio, sr = run_tts(pre_process_text(sent, lang), lang, t2s)
         audio_list.append(audio)
 
     concatenated_audio = np.concatenate([i for i in audio_list])
