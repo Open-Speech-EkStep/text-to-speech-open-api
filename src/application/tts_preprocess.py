@@ -53,7 +53,7 @@ def infer_tts(language: str, gender: str, text_to_infer: str):
         )
 
     if text_to_infer:
-        text_to_infer = normalize_text(text_to_infer, lang)
+        text_to_infer = normalize_text(text_to_infer, language)
         
         
         #if len(text_to_infer) > settings.tts_max_text_limit:
