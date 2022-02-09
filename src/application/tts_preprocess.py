@@ -38,7 +38,7 @@ def infer_tts_request(request: TTSRequest):
         return TTSResponse(audio=output_list, config=audio_config)
     except Exception as e:
         LOGGER.exception('Failed to infer %s', e)
-        return TTSFailureResponse(status_text='Failed to infer ' + str(e))
+        raise e
 
 
 def infer_tts(language: str, gender: str, text_to_infer: str):
@@ -54,14 +54,13 @@ def infer_tts(language: str, gender: str, text_to_infer: str):
 
     if text_to_infer:
         text_to_infer = normalize_text(text_to_infer, language)
-        
-        
-        #if len(text_to_infer) > settings.tts_max_text_limit:
+
+        # if len(text_to_infer) > settings.tts_max_text_limit:
         LOGGER.debug("Running in paragraph mode...")
         audio, sr = run_tts_paragraph(text_to_infer, language, t2s)
-#         else:
-#             LOGGER.debug("Running in text mode...")
-#             audio, sr = run_tts(text_to_infer, language, t2s)
+        #         else:
+        #             LOGGER.debug("Running in text mode...")
+        #             audio, sr = run_tts(text_to_infer, language, t2s)
         torch.cuda.empty_cache()  # TODO: find better approach for this
         LOGGER.debug('Audio generates successfully')
         bytes_wav = bytes()
@@ -88,7 +87,8 @@ def normalize_text(text, lang):
         text = text.replace('|', '।')
         text = text.replace('.', '।')
     return text
-    
+
+
 def pre_process_text(text, lang):
     if lang == 'hi':
         text = text.replace('।', '.')  # only for hindi models
