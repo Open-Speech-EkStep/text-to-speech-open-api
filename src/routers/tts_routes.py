@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi import Response, status
 
 from src import log_setup
 from src.application.tts_preprocess import infer_tts_request
@@ -10,16 +11,12 @@ router = APIRouter()
 
 
 @router.post("/")
-async def tts(request: TTSRequest):
+async def tts(request: TTSRequest, response: Response):
     LOGGER.info(f'TTS request {request}')
-    response = None
-    error = None
     try:
-        response = infer_tts_request(request)
+        infer_response = infer_tts_request(request)
+        return infer_response
     except Exception as e:
         LOGGER.exception('Failed to infer %s', e)
-        error = e
-    if response is not None:
-        return response
-    else:
-        return TTSFailureResponse(status_text=f'Failed to process request {str(error)}')
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return TTSFailureResponse(status_text=f'Failed to process request {str(e)}')
