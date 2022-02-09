@@ -1,6 +1,5 @@
 import base64
 import io
-from typing import List
 
 import numpy as np
 import torch
@@ -11,11 +10,10 @@ from scipy.io.wavfile import write
 from tts_infer.num_to_word_on_sent import normalize_nums
 
 from src import log_setup
-from src.config import settings
 from src.infer.model_inference import ModelService
 from src.model.language import Language
 from src.model.tts_request import TTSRequest
-from src.model.tts_response import TTSResponse, AudioFile, TTSFailureResponse, AudioConfig
+from src.model.tts_response import TTSResponse, AudioFile, AudioConfig
 
 LOGGER = log_setup.get_logger(__name__)
 model_service = ModelService()
@@ -110,8 +108,11 @@ def run_tts_paragraph(text, lang, t2s):
 
 def run_tts(text, lang, t2s):
     text_num_to_word = normalize_nums(text, lang)  # converting numbers to words in lang
-    text_num_to_word_and_transliterated = model_service.transliterate_obj.translit_sentence(text_num_to_word,
-                                                                                            lang)  # transliterating english words to lang
+    if lang != 'or':
+        text_num_to_word_and_transliterated = model_service.transliterate_obj.translit_sentence(text_num_to_word,
+                                                                                                lang)  # transliterating english words to lang
+    else:
+        text_num_to_word_and_transliterated = text_num_to_word
     mel = t2s[0].generate_mel(' ' + text_num_to_word_and_transliterated)
     audio, sr = t2s[1].generate_wav(mel)
     return audio, sr
