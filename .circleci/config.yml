@@ -7,7 +7,7 @@ parameters:
     default: text_to_speech_open_api
   package_version:
     type: string
-    default: "2.1.13"
+    default: "2.1.14"
   dependency_image_name:
     type: string
     default: text_to_speech_open_api_dependency

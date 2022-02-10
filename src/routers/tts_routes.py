@@ -1,5 +1,4 @@
-from fastapi import APIRouter
-from fastapi import Response, status
+from fastapi import APIRouter, HTTPException, Response, status
 
 from src import log_setup
 from src.application.tts_preprocess import infer_tts_request
@@ -16,6 +15,10 @@ async def tts(request: TTSRequest, response: Response):
     try:
         infer_response = infer_tts_request(request)
         return infer_response
+    except NotImplementedError as e:
+        LOGGER.exception('Failed to infer http exception %s', e)
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return TTSFailureResponse(status_text=str(e))
     except Exception as e:
         LOGGER.exception('Failed to infer %s', e)
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -46,9 +46,7 @@ def infer_tts(language: str, gender: str, text_to_infer: str):
     if choice in model_service.available_choice.keys():
         t2s = model_service.available_choice[choice]
     else:
-        raise HTTPException(
-            status_code=400, detail={"error": "Requested model not found"}
-        )
+        raise NotImplementedError('Requested model not found')
 
     if text_to_infer:
         text_to_infer = normalize_text(text_to_infer, language)
