@@ -18,7 +18,7 @@ from src.model.tts_response import TTSResponse, AudioFile, AudioConfig
 LOGGER = log_setup.get_logger(__name__)
 model_service = ModelService()
 _INDIC = ["as", "bn", "gu", "hi", "kn", "ml", "mr", "or", "pa", "ta", "te"]
-
+_PURAM_VIRAM_LANGUAGES = ["hi", "or", "bn", "as"]
 
 def infer_tts_request(request: TTSRequest):
     config = request.config
@@ -79,7 +79,7 @@ def split_sentences(paragraph, language):
 
 
 def normalize_text(text, lang):
-    if lang == 'hi':
+    if lang in _PURAM_VIRAM_LANGUAGES:
         text = text.replace('|', '।')
         text = text.replace('.', '।')
     return text
