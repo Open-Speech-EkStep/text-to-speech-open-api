@@ -12,6 +12,7 @@ pip3 install --no-cache-dir -r requirements.txt
 bash install.sh
 python3 setup.py bdist_wheel
 pip install -e .
+pip3 install torch==1.7.1+cu110 -f https://download.pytorch.org/whl/torch_stable.html
 cd tts_infer
 mkdir -p translit_models
 #gsutil -m cp -r gs://vakyaansh-open-models/translit_models .
