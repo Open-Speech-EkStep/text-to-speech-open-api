@@ -54,3 +54,73 @@
 
 ### Running with Docker image
 
+Pre-built docker images are hosted on `gcr.io/ekstepspeechrecognition/speech_recognition_model_api`.
+We do not follow the latest tag, so you have to use a specific tag.
+
+```
+docker pull gcr.io/ekstepspeechrecognition/text_to_speech_open_api:2.1.15
+```
+
+**Running with docker**
+
+```shell
+docker run -itd -p 5000:5000 --gpus all -v <your location for deployed_models>:/opt/text_to_speech_open_api/deployed_models/ -v <your location for translit_models>:/opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/tts_infer/translit_models/ gcr.io/ekstepspeechrecognition/text_to_speech_open_api:2.1.15
+```
+
+
+**Directory structure of `/opt/text_to_speech_open_api/deployed_models/`**
+
+```
+.
+|-- gujarati
+|   |-- female
+|   |   |-- glow_tts
+|   |   |   |-- G_190.pth
+|   |   |   `-- config.json
+|   |   `-- hifi_tts
+|   |       |-- config.json
+|   |       `-- g_00100000
+|   `-- male
+|       |-- glow_tts
+|       |   |-- G_170.pth
+|       |   `-- config.json
+|       `-- hifi_tts
+|           |-- config.json
+|           `-- g_00100000
+|-- hindi
+|   |-- female
+|   |   |-- glow_tts
+|   |   |   |-- G_100.pth
+|   |   |   |-- G_250.pth
+|   |   |   `-- config.json
+|   |   `-- hifi_tts
+|   |       |-- config.json
+|   |       `-- g_00100000
+|   `-- male
+|       |-- glow_tts
+|       |   |-- G_100.pth
+|       |   `-- config.json
+|       `-- hifi_tts
+|           |-- config.json
+|           `-- g_00200000
+```
+
+**Directory structure for `/opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/tts_infer/translit_models/`** translit models will be downloaded automatically.
+
+```shell
+.
+|-- README.md
+|-- bengali
+|   |-- bn_101_model.pth
+|   |-- bn_scripts.json
+|   `-- bn_words_a4b.json
+|-- default_lineup.json
+|-- gujarati
+|   |-- gu_101_model.pth
+|   |-- gu_scripts.json
+|   `-- gu_words_a4b.json
+|-- hindi
+|   |-- hi_111_model.pth
+|   |-- hi_scripts.json
+|   |-- hi_words_a4b.json
+```
