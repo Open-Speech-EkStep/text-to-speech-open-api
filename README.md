@@ -70,7 +70,7 @@ docker run -itd -p 5000:5000 --gpus all -v <your location for deployed_models>:/
 
 **Directory structure of `/opt/text_to_speech_open_api/deployed_models/`**
 
-```
+```shell
 .
 |-- gujarati
 |   |-- female
