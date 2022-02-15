@@ -13,17 +13,30 @@ from src.config import settings
 LOGGER = log_setup.get_logger(__name__)
 
 
+def get_gpu_info(gpu):
+    LOGGER.info(f"*** GPU is enabled: {gpu} ***")
+    if gpu:
+        no_gpus = torch.cuda.device_count()
+        LOGGER.info(f"*** Total number of gpus allocated are {no_gpus} ***")
+        LOGGER.info(f"*** Cuda Version {torch.version.cuda} ***")
+        LOGGER.info(f"*** Python process id {os.getpid()} ***")
+        LOGGER.info("*** The gpu device info : ***")
+        for gpu in range(0, no_gpus):
+            LOGGER.info(f"GPU {str(gpu)} - {str(torch.cuda.get_device_name(gpu))}")
+
+
 class ModelService:
 
     def __init__(self):
+        LOGGER.info(f'Loading with settings {settings}')
         gpu_present = torch.cuda.is_available()
         LOGGER.info("Gpu present : %s", gpu_present)
-        LOGGER.info(f'Loading with settings {settings}')
+        get_gpu_info(settings.gpu)
 
         self.device = "cuda" if gpu_present & settings.gpu else "cpu"
         LOGGER.info("Using device : %s", self.device)
 
-        model_config_file_path = settings.models_base_path+settings.model_config_file_path
+        model_config_file_path = settings.models_base_path + settings.model_config_file_path
         if os.path.exists(model_config_file_path):
             with open(model_config_file_path, 'r') as f:
                 model_config = json.load(f)
