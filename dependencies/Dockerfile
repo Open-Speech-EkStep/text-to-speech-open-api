@@ -1,4 +1,4 @@
-FROM 11.4.0-cudnn8-devel-ubuntu18.04
+FROM nvidia/11.4.0-cudnn8-devel-ubuntu18.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
