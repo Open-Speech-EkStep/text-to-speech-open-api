@@ -1,5 +1,4 @@
-FROM nvidia/11.4.0-cudnn8-devel-ubuntu18.04
-
+FROM nvidia/cuda:11.4.0-cudnn8-devel-ubuntu20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN mkdir /opt/api_dependencies/
