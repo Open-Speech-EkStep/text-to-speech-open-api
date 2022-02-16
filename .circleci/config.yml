@@ -13,7 +13,7 @@ parameters:
     default: text_to_speech_open_api_dependency
   dependency_version:
     type: string
-    default: "2.1.1"
+    default: "2.1.2"
   build_dependency:
     type: boolean
     default: true
