@@ -93,7 +93,7 @@ def pre_process_text(text, lang):
 
 def run_tts_paragraph(text, lang, t2s):
     audio_list = []
-    split_sentences_list = split_sentences(text, language='hi')
+    split_sentences_list = split_sentences(text, language=lang)
 
     for sent in split_sentences_list:
         audio, sr = run_tts(pre_process_text(sent, lang), lang, t2s)
