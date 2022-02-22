@@ -44,7 +44,7 @@ jobs:
           name: Setup Testing Environment
           command: |
             python --version ; pip --version ; pwd ; ls
-            sudo apt install -y python3
+            sudo apt install -y python3 python-is-python3
             alias python=python3
             sudo apt install -y python3-pip
             alias pip=pip3
