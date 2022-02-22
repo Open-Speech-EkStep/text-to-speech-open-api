@@ -42,7 +42,7 @@ jobs:
     working_directory: ~/text-to-speech-open-api/
     steps:
       - checkout:
-          path: ~/project
+          path: ~/text-to-speech-open-api/
       - run:
           name: Setup Testing Environment
           command: |
@@ -60,10 +60,6 @@ jobs:
             coverage html  # open htmlcov/index.html in a browser
       - store_artifacts:
           path: htmlcov
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - ./test-suite-results
 
 
   build_and_deploy_api_image:
