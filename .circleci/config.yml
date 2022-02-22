@@ -44,7 +44,7 @@ jobs:
           name: Setup Testing Environment
           command: |
             pip install --upgrade pip
-            pip install pytest==6.2.3 pytest-grpc==0.8.0 coverage
+            pip install pytest pytest-grpc coverage
             python --version ; pip --version ; pwd ; ls
       - run:
           name: Run Tests
