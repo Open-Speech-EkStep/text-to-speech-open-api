@@ -33,6 +33,33 @@ jobs:
           name: Sonar Scan
           command: docker run --rm -e SONAR_HOST_URL="https://sonarcloud.io" -e SONAR_TOKEN=$SONAR_TOKEN -v $PWD:/usr/src sonarsource/sonar-scanner-cli -Dsonar.branch.name=$CIRCLE_BRANCH
 
+  test-suite:
+    machine:
+      image: ubuntu-2004:202101-01
+    working_directory: ~/text-to-speech-open-api/
+    steps:
+      - checkout:
+          path: ~/text-to-speech-open-api
+      - run:
+          name: Setup Testing Environment
+          command: |
+            pip install --upgrade pip
+            pip install pytest==6.2.3 pytest-grpc==0.8.0 coverage
+            python --version ; pip --version ; pwd ; ls
+      - run:
+          name: Run Tests
+          command: |
+            coverage run -m unittest discover
+            coverage report --fail-under 20  src/*/*.py
+            coverage html  # open htmlcov/index.html in a browser
+      - store_artifacts:
+          path: htmlcov
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - packages/test-suite-results
+
+
   build_and_deploy_api_image:
     machine:
       image: ubuntu-2004:202101-01
@@ -83,9 +110,13 @@ workflows:
     jobs:
     - sonar-scan:
         name: sonar-scan
+    - test-suite:
+        name: test-suite
     - approve_to_publish:
          name: approve-build-and-deploy
          type: approval
+         requires:
+           - test-suite
     - build_and_deploy_api_image:
          name: build_and_deploy_api_image
          requires:
