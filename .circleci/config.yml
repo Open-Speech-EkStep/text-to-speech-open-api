@@ -45,15 +45,17 @@ jobs:
           command: |
             python --version ; pip --version ; pwd ; ls
             sudo apt install -y python3
-            sudo ln -s /usr/bin/python3 /usr/bin/python
+            alias python=python3
             sudo apt install -y python3-pip
-            sudo ln -s /usr/bin/pip3 /usr/bin/pip
+            alias pip=pip3
             pip install --upgrade pip
             pip install pytest pytest-grpc coverage
             python --version ; pip --version ; pwd ; ls
       - run:
           name: Run Tests
           command: |
+            alias python=python3
+            alias pip=pip3
             python --version ; pip --version ; pwd ; ls
             pwd ; coverage run -m unittest discover tests
             pytest
