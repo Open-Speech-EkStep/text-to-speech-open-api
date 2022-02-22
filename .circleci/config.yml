@@ -35,7 +35,7 @@ jobs:
 
   test-suite:
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2004:202111-02
     working_directory: ~/text-to-speech-open-api/
     steps:
       - checkout:
@@ -49,7 +49,8 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            coverage run -m unittest discover
+            pwd ; coverage run -m unittest discover tests
+            pytest
             coverage report --fail-under 20  src/*/*.py
             coverage html  # open htmlcov/index.html in a browser
       - store_artifacts:
