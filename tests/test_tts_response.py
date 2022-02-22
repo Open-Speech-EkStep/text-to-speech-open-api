@@ -15,7 +15,7 @@ class TTSResponseTest(unittest.TestCase):
         self.assertEqual(response.config.language.sourceLanguage, 'hi', 'language does not match')
         self.assertEqual(response.config.samplingRate, 22050, 'default value for sample rate does not match')
         self.assertEqual(response.config.encoding, 'base64', 'default value for encoding is not set')
-        self.assertEqual(response.config.audioFormat, 'wav', 'default value for audio format is not set')
+        self.assertEqual(response.config.audioFormat, 'mp3', 'default value for audio format is not set')
 
     def testTextIsRequiredValues(self):
         try:
