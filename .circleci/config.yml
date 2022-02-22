@@ -18,6 +18,10 @@ parameters:
     type: boolean
     default: false
 
+executors:
+  node:
+    docker:
+      - image: circleci/python:3.8.6
 jobs:
   sonar-scan:
     machine:
@@ -34,8 +38,7 @@ jobs:
           command: docker run --rm -e SONAR_HOST_URL="https://sonarcloud.io" -e SONAR_TOKEN=$SONAR_TOKEN -v $PWD:/usr/src sonarsource/sonar-scanner-cli -Dsonar.branch.name=$CIRCLE_BRANCH
 
   test-suite:
-    machine:
-      image: ubuntu-2004:202111-02
+    executor: node
     working_directory: ~/text-to-speech-open-api/
     steps:
       - checkout:
@@ -43,8 +46,7 @@ jobs:
       - run:
           name: Setup Testing Environment
           command: |
-            python --version ; pip --version ; pwd ; ls
-            sudo apt install -y python3 python-is-python3
+            python --version ;python3 --version ; pip --version ; pwd ; ls
             alias python=python3
             sudo apt install -y python3-pip
             alias pip=pip3
@@ -66,7 +68,7 @@ jobs:
       - persist_to_workspace:
           root: ~/project
           paths:
-            - packages/test-suite-results
+            - ./test-suite-results
 
 
   build_and_deploy_api_image:
