@@ -46,18 +46,13 @@ jobs:
       - run:
           name: Setup Testing Environment
           command: |
-            python --version ;python3 --version ; pip --version ; pwd ; ls
-            alias python=python3
-            sudo apt install -y python3-pip
-            alias pip=pip3
+            python --version ;pip --version ; pwd ; ls
             pip install --upgrade pip
             pip install pytest pytest-grpc coverage
             python --version ; pip --version ; pwd ; ls
       - run:
           name: Run Tests
           command: |
-            alias python=python3
-            alias pip=pip3
             python --version ; pip --version ; pwd ; ls
             pwd ; coverage run -m unittest discover tests
             pytest
