@@ -42,7 +42,7 @@ jobs:
     working_directory: ~/text-to-speech-open-api/
     steps:
       - checkout:
-          path: ~/text-to-speech-open-api
+          path: ~/project
       - run:
           name: Setup Testing Environment
           command: |
