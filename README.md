@@ -1,6 +1,6 @@
 # Text to Speech API
 
-### Documentation
+### Documentation for TTS
 **Project Documentation:**  https://open-speech-ekstep.github.io/tts_model_api/
 
 **Api Documentation:** Swagger API document is hosted on `/docs` endpoint.
