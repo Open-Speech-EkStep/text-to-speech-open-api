@@ -8,7 +8,6 @@ from indicnlp.tokenize import sentence_tokenize
 from mosestokenizer import MosesSentenceSplitter
 from scipy.io.wavfile import write
 from tts_infer.num_to_word_on_sent import normalize_nums
-import nnresample
 
 from src import log_setup
 from src.infer.model_inference import ModelService
@@ -16,13 +15,10 @@ from src.model.language import Language
 from src.model.tts_request import TTSRequest
 from src.model.tts_response import TTSResponse, AudioFile, AudioConfig
 
-SAMPLE_RATE = 16000
-
 LOGGER = log_setup.get_logger(__name__)
 model_service = ModelService()
 _INDIC = ["as", "bn", "gu", "hi", "kn", "ml", "mr", "or", "pa", "ta", "te"]
 _PURAM_VIRAM_LANGUAGES = ["hi", "or", "bn", "as"]
-
 
 def infer_tts_request(request: TTSRequest):
     config = request.config
@@ -58,13 +54,18 @@ def infer_tts(language: str, gender: str, text_to_infer: str):
         # if len(text_to_infer) > settings.tts_max_text_limit:
         LOGGER.debug("Running in paragraph mode...")
         audio, sr = run_tts_paragraph(text_to_infer, language, t2s)
+        #         else:
+        #             LOGGER.debug("Running in text mode...")
+        #             audio, sr = run_tts(text_to_infer, language, t2s)
         torch.cuda.empty_cache()  # TODO: find better approach for this
-        LOGGER.debug('Audio generated successfully')
-        low_sampled_audio = nnresample.resample(audio, SAMPLE_RATE, sr)
-        encoded_bytes = base64.b64encode(np.array(low_sampled_audio).tobytes())
+        LOGGER.debug('Audio generates successfully')
+        bytes_wav = bytes()
+        byte_io = io.BytesIO(bytes_wav)
+        write(byte_io, sr, audio)
+        encoded_bytes = base64.b64encode(byte_io.read())
         encoded_string = encoded_bytes.decode()
         LOGGER.debug(f'Encoded Audio string {encoded_string}')
-        return AudioFile(audioContent=encoded_string, samplingRate=SAMPLE_RATE)
+        return AudioFile(audioContent=encoded_string)
     else:
         raise HTTPException(status_code=400, detail={"error": "No text"})
 

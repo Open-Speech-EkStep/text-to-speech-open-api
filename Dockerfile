@@ -13,7 +13,5 @@ RUN cp -R /opt/api_dependencies/vakyansh-tts/tts_infer /opt/text_to_speech_open_
 WORKDIR /opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/
 COPY src /opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/src
 COPY ./server.py /opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/
-COPY ./requirements.txt /opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/
-RUN pip3 install --no-cache-dir -r /opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/requirements.txt
 CMD ["python3","/opt/text_to_speech_open_api/vakyansh-tts/src/glow_tts/server.py"]
 
