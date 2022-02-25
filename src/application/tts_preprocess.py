@@ -59,10 +59,11 @@ def infer_tts(language: str, gender: str, text_to_infer: str):
         LOGGER.debug("Running in paragraph mode...")
         audio, sr = run_tts_paragraph(text_to_infer, language, t2s)
         torch.cuda.empty_cache()  # TODO: find better approach for this
-        LOGGER.debug('Audio generated successfully')
+        LOGGER.debug(f'Audio generated successfully with length {len(audio)}')
         low_sampled_audio = nnresample.resample(audio, SAMPLE_RATE, sr)
-        encoded_bytes = base64.b64encode(np.array(low_sampled_audio).tobytes())
-        encoded_string = encoded_bytes.decode()
+        low_sampled_audio = low_sampled_audio.astype('<' + low_sampled_audio.dtype.str[1:], copy=False)
+        LOGGER.debug(f'Audio sampled successfully with length {len(low_sampled_audio)}')
+        encoded_string = low_sampled_audio.tobytes().decode()
         LOGGER.debug(f'Encoded Audio string {encoded_string}')
         return AudioFile(audioContent=encoded_string, samplingRate=SAMPLE_RATE)
     else:
