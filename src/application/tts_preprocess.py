@@ -63,11 +63,7 @@ def infer_tts(language: str, gender: str, text_to_infer: str):
         low_sampled_audio = nnresample.resample(audio, SAMPLE_RATE, sr)
         low_sampled_audio = low_sampled_audio.astype('<' + low_sampled_audio.dtype.str[1:], copy=False)
         LOGGER.debug(f'Audio sampled successfully with length {len(low_sampled_audio)}')
-        bytes_wav = bytes()
-        byte_io = io.BytesIO(bytes_wav)
-        write(byte_io, sr, low_sampled_audio)
-        encoded_bytes = base64.b64encode(byte_io.read())
-        encoded_string = encoded_bytes.decode()
+        encoded_string = low_sampled_audio.tobytes().decode('utf-8', 'replace')
         LOGGER.debug(f'Encoded Audio string {encoded_string}')
         return AudioFile(audioContent=encoded_string, samplingRate=SAMPLE_RATE)
     else:
