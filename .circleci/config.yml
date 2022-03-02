@@ -7,16 +7,16 @@ parameters:
     default: text_to_speech_open_api
   package_version:
     type: string
-    default: "2.1.22"
+    default: "2.1.24"
   dependency_image_name:
     type: string
     default: text_to_speech_open_api_dependency
   dependency_version:
     type: string
-    default: "2.1.3"
+    default: "2.1.4"
   build_dependency:
     type: boolean
-    default: false
+    default: true
 
 executors:
   node:
