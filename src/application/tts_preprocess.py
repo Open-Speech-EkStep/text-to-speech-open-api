@@ -19,6 +19,7 @@ LOGGER = log_setup.get_logger(__name__)
 model_service = ModelService()
 _INDIC = ["as", "bn", "gu", "hi", "kn", "ml", "mr", "or", "pa", "ta", "te"]
 _PURAM_VIRAM_LANGUAGES = ["hi", "or", "bn", "as"]
+_TRANSLITERATION_NOT_AVAILABLE_IN = ["en","or"]
 
 def infer_tts_request(request: TTSRequest):
     config = request.config
@@ -106,7 +107,7 @@ def run_tts_paragraph(text, lang, t2s):
 
 def run_tts(text, lang, t2s):
     text_num_to_word = normalize_nums(text, lang)  # converting numbers to words in lang
-    if lang != 'or':
+    if lang not in _TRANSLITERATION_NOT_AVAILABLE_IN:
         text_num_to_word_and_transliterated = model_service.transliterate_obj.translit_sentence(text_num_to_word,
                                                                                                 lang)  # transliterating english words to lang
     else:
