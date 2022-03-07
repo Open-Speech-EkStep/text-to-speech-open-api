@@ -49,16 +49,18 @@ class ModelService:
         LOGGER.info(f'requested languages are {languages}')
         for language_code, lang_config in model_config.items():
             if language_code in languages or 'all' in languages:
-                self.available_choice[f"{language_code}_male"] = [
-                    TextToMel(glow_model_dir=settings.models_base_path + lang_config.get("male_glow"),
-                              device=self.device),
-                    MelToWav(hifi_model_dir=settings.models_base_path + lang_config.get("male_hifi"),
-                             device=self.device)]
-                self.available_choice[f"{language_code}_female"] = [
-                    TextToMel(glow_model_dir=settings.models_base_path + lang_config.get("female_glow"),
-                              device=self.device),
-                    MelToWav(hifi_model_dir=settings.models_base_path + lang_config.get("female_hifi"),
-                             device=self.device)]
+                if lang_config.get("male_glow") is not None:
+                    self.available_choice[f"{language_code}_male"] = [
+                        TextToMel(glow_model_dir=settings.models_base_path + lang_config.get("male_glow"),
+                                  device=self.device),
+                        MelToWav(hifi_model_dir=settings.models_base_path + lang_config.get("male_hifi"),
+                                 device=self.device)]
+                if lang_config.get("female_glow") is not None:
+                    self.available_choice[f"{language_code}_female"] = [
+                        TextToMel(glow_model_dir=settings.models_base_path + lang_config.get("female_glow"),
+                                  device=self.device),
+                        MelToWav(hifi_model_dir=settings.models_base_path + lang_config.get("female_hifi"),
+                                 device=self.device)]
                 LOGGER.info(f'{language_code} Models initialized successfully')
         LOGGER.info(f'Model service available_choices are {self.available_choice}')
         if len(self.available_choice) == 0:
