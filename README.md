@@ -54,6 +54,8 @@
 
 ### Running with Docker image
 
+You can use a pre-built image of this repo to run in docker. Models are open sourced in our https://github.com/Open-Speech-EkStep/vakyansh-models.
+
 Pre-built docker images are hosted on `gcr.io/ekstepspeechrecognition/speech_recognition_model_api`.
 We do not follow the latest tag, so you have to use a specific tag.
 
@@ -124,3 +126,10 @@ docker run -itd -p 5000:5000 --gpus all -v <your location for deployed_models>:/
 |   |-- hi_scripts.json
 |   |-- hi_words_a4b.json
 ```
+
+### Building from source
+
+We build this app in two steps to expedite the process of changes in the main source. We build a dependency image `gcr.io/ekstepspeechrecognition/text_to_speech_open_api_dependency
+` for which you can find dependency docker image file at [dependencies/Dockerfile](dependencies/Dockerfile). 
+Using dependency image, we build the main images which are published at `gcr.io/ekstepspeechrecognition/text_to_speech_open_api`. Docker file for this step is available [here](Dockerfile).
+You can use these steps to recreate the bundle. We recommend using some environment manager like [conda](https://github.com/conda/conda).
