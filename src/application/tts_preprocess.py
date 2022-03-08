@@ -89,6 +89,10 @@ def normalize_text(text, lang):
 def pre_process_text(text, lang):
     if lang == 'hi':
         text = text.replace('।', '.')  # only for hindi models
+        
+    if lang == 'en' and text[-1] != '.':
+            text = text + '. '
+            
     return text
 
 
