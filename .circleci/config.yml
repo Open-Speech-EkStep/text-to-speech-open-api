@@ -16,7 +16,7 @@ parameters:
     default: "2.1.6"
   build_dependency:
     type: boolean
-    default: true
+    default: false
 
 executors:
   node:
