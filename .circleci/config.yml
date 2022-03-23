@@ -25,7 +25,7 @@ executors:
 jobs:
   sonar-scan:
     machine:
-      image: cimg/base:2022.03
+      image: cimg/base:2022.03-20.04
     working_directory: ~/text-to-speech-open-api/
     steps:
       - checkout:
