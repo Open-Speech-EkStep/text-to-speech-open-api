@@ -127,6 +127,25 @@ docker run -itd -p 5000:5000 --gpus all -v <your location for deployed_models>:/
 |   |-- hi_words_a4b.json
 ```
 
+**Sample model_dict.json**
+
+```yaml
+{
+  "hi": {
+    "male_glow": "hindi/male/glow_tts",
+    "male_hifi": "hindi/male/hifi_tts",
+    "female_glow": "hindi/female/glow_tts",
+    "female_hifi": "hindi/female/hifi_tts"
+  },
+  "ta": {
+    "male_glow": "tamil/male/glow_tts",
+    "male_hifi": "tamil/male/hifi_tts",
+    "female_glow": "tamil/female/glow_tts",
+    "female_hifi": "tamil/female/hifi_tts"
+  }
+}
+```
+
 ### Building from source
 
 We build this app in two steps to expedite the process of changes in the main source. We build a dependency image `gcr.io/ekstepspeechrecognition/text_to_speech_open_api_dependency
