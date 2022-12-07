@@ -1,125 +1,20 @@
-version: 2.1
-
-parameters:
-  # This parameter is used to trigger the main workflow
-  image_name:
-    type: string
-    default: text_to_speech_open_api
-  package_version:
-    type: string
-    default: "2.1.31"
-  dependency_image_name:
-    type: string
-    default: text_to_speech_open_api_dependency
-  dependency_version:
-    type: string
-    default: "2.1.7"
-  build_dependency:
-    type: boolean
-    default: true
-
-executors:
-  node:
-    docker:
-      - image: cimg/python:3.8.6
+name: Build
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
-  sonar-scan:
-    machine:
-      image: ubuntu-2004:202201-02
-    working_directory: ~/text-to-speech-open-api/
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
     steps:
-      - checkout:
-          path: ~/text-to-speech-open-api
-      - run:
-          name: Branch
-          command: echo $CIRCLE_BRANCH
-      - run:
-          name: Sonar Scan
-          command: docker run --rm -e SONAR_HOST_URL="https://sonarcloud.io" -e SONAR_TOKEN=$SONAR_TOKEN -v $PWD:/usr/src sonarsource/sonar-scanner-cli -Dsonar.branch.name=$CIRCLE_BRANCH
-
-  test-suite:
-    executor: node
-    working_directory: ~/text-to-speech-open-api/
-    steps:
-      - checkout:
-          path: ~/text-to-speech-open-api/
-      - run:
-          name: Setup Testing Environment
-          command: |
-            python --version ;pip --version ; pwd ; ls
-            pip install --upgrade pip
-            pip install pytest grpcio grpcio-tools pytest-grpc coverage pydantic
-            python --version ; pip --version ; pwd ; ls
-      - run:
-          name: Run Tests
-          command: |
-            python --version ; pip --version ; pwd ; ls
-            pwd ; coverage run -m unittest discover tests
-            pytest
-            coverage report --fail-under 20  src/*/*.py
-            coverage html  # open htmlcov/index.html in a browser
-      - store_artifacts:
-          path: htmlcov
-
-
-  build_and_deploy_api_image:
-    machine:
-      image: ubuntu-2004:202101-01
-      resource_class: large
-    working_directory: ~/text-to-speech-open-api/
-    steps:
-      - checkout:
-          path: ~/text-to-speech-open-api
-      - run:
-          name: Setup Google credentials
-          command: |
-            echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
-            pip install google_compute_engine
-            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-            gcloud --quiet config set project ${GCP_PROJECT}
-      - run:
-          name: Build dependencies image
-          command: |
-            echo "Build dependencies..."
-            if << pipeline.parameters.build_dependency >> ; then
-              docker build --rm=false -t gcr.io/${GCP_PROJECT}/<< pipeline.parameters.dependency_image_name >>:<< pipeline.parameters.dependency_version >> dependencies/
-              gcloud docker -- push gcr.io/${GCP_PROJECT}/<< pipeline.parameters.dependency_image_name >>:<< pipeline.parameters.dependency_version >>
-            fi
-#      - when:
-#          condition:
-#            equal: [ true, << pipeline.paramaters.build_dependency >> ]
-#          steps:
-#            - run: |
-#                docker build --rm=false -t gcr.io/${GCP_PROJECT}/<< pipeline.parameters.dependency_image_name >>:<< pipeline.parameters.dependency_version >> dependencies/
-#                gcloud docker -- push gcr.io/${GCP_PROJECT}/<< pipeline.parameters.dependency_image_name >>:<< pipeline.parameters.dependency_version >>
-      - run:
-          name: Build docker image
-          command: |
-            echo "Build api image..."
-            docker build --rm=false -t gcr.io/${GCP_PROJECT}/<< pipeline.parameters.image_name >>:<< pipeline.parameters.package_version >> .
-      - run:
-          name: deploy image to registry
-          command: |
-            echo "Deploy api image to registry..."
-            gcloud docker -- push gcr.io/${GCP_PROJECT}/<< pipeline.parameters.image_name >>:<< pipeline.parameters.package_version >>
-      - run:
-          name: Remove account details
-          command: |
-            rm ${HOME}/gcp-key.json ; ls
-workflows:
-  version: 2
-  main_workflow:
-    jobs:
-    - sonar-scan:
-        name: sonar-scan
-    - test-suite:
-        name: test-suite
-    - approve_to_publish:
-         name: approve-build-and-deploy
-         type: approval
-         requires:
-           - test-suite
-    - build_and_deploy_api_image:
-         name: build_and_deploy_api_image
-         requires:
-            - approve-build-and-deploy
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
