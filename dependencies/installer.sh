@@ -15,6 +15,6 @@ pip3 install -e .
 pip3 install torch==1.7.1+cu110 -f https://download.pytorch.org/whl/torch_stable.html
 cd tts_infer
 mkdir -p translit_models
-#gsutil -m cp -r gs://vakyaansh-open-models/translit_models .
+#gsutil -m cp -r gs://vakyansh-open-models/translit_models .
 
 
